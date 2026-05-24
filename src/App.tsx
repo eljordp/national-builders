@@ -52,6 +52,15 @@ const gallery = [
   { src: '/images/kitchen.jpg', alt: 'Modular kitchen install' },
 ]
 
+const reels = [
+  { id: 'DWGxdt2gmML', poster: '/images/sirca.jpg', label: 'Italian craftsmanship. Sirca PU coatings.' },
+  { id: 'DXzqDfpTYF3', poster: '/images/nerolac.jpg', label: 'Three decades of Nerolac in Jammu.' },
+  { id: 'DYoyjpxibXh', poster: '/images/plywood.jpg', label: 'Wigwam Excel ply. Lifetime warranty.' },
+  { id: 'DXZPSGFAqMb', poster: '/images/hafele.jpg', label: 'Häfele biometric locks for the modern wardrobe.' },
+  { id: 'DVjSuC0gjlt', poster: '/images/kitchen.jpg', label: 'Everything under one roof.' },
+  { id: 'DQNDYgtk6k9', poster: '/images/marble.jpg', label: 'Marble textures at wholesale.' },
+]
+
 export default function App() {
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
@@ -75,6 +84,7 @@ export default function App() {
             <a href="#catalog" className="hover:text-clay">Catalog</a>
             <a href="#brands" className="hover:text-clay">Brands</a>
             <a href="#showroom" className="hover:text-clay">Showroom</a>
+            <a href="#watch" className="hover:text-clay">Watch</a>
             <a href="#visit" className="hover:text-clay">Visit</a>
           </nav>
           <a
@@ -232,6 +242,44 @@ export default function App() {
               />
             </a>
           ))}
+        </div>
+      </section>
+
+      <section id="watch" className="bg-sand/60 py-24 border-y border-ink/10">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex items-end justify-between mb-12 flex-wrap gap-6">
+            <div>
+              <p className="uppercase tracking-[0.3em] text-xs text-clay mb-4">From the floor</p>
+              <h2 className="font-display text-4xl md:text-5xl max-w-xl">
+                See the materials in motion.
+              </h2>
+            </div>
+            <a
+              href="https://www.instagram.com/nationalbuilders92/reels/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-clay hover:text-burnt underline underline-offset-4"
+            >
+              All reels on Instagram
+            </a>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {reels.map((r) => (
+              <figure key={r.id} className="space-y-3">
+                <div className="relative w-full overflow-hidden rounded-2xl border border-ink/10 bg-ink shadow-sm" style={{ aspectRatio: '9 / 16' }}>
+                  <video
+                    src={`/reels/${r.id}.mp4`}
+                    poster={r.poster}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    controls
+                    playsInline
+                    preload="metadata"
+                  />
+                </div>
+                <figcaption className="text-sm text-ink/70">{r.label}</figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
 
