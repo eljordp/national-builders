@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const brands = [
   'Nerolac',
@@ -60,6 +60,72 @@ const reels = [
   { id: 'DVjSuC0gjlt', poster: '/images/kitchen.jpg', label: 'Everything under one roof.' },
   { id: 'DQNDYgtk6k9', poster: '/images/marble.jpg', label: 'Marble textures at wholesale.' },
 ]
+
+function ReelCard({ reel }: { reel: { id: string; poster: string; label: string } }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [muted, setMuted] = useState(true)
+  const [playing, setPlaying] = useState(false)
+
+  const play = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.play().then(() => setPlaying(true)).catch(() => {})
+  }
+  const pause = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.pause()
+    v.currentTime = 0
+    setPlaying(false)
+  }
+
+  return (
+    <figure className="space-y-3">
+      <div
+        className="relative w-full overflow-hidden rounded-2xl border border-ink/10 bg-ink shadow-sm cursor-pointer group"
+        style={{ aspectRatio: '9 / 16' }}
+        onMouseEnter={play}
+        onMouseLeave={pause}
+        onClick={(e) => {
+          e.preventDefault()
+          const v = videoRef.current
+          if (!v) return
+          if (v.paused) play()
+          setMuted((m) => {
+            v.muted = !m
+            return !m
+          })
+        }}
+      >
+        <video
+          ref={videoRef}
+          src={`/reels/${reel.id}.mp4`}
+          poster={reel.poster}
+          className="absolute inset-0 w-full h-full object-cover"
+          playsInline
+          loop
+          muted={muted}
+          preload="metadata"
+        />
+        {!playing && (
+          <div className="absolute inset-0 flex items-center justify-center bg-ink/20 group-hover:bg-ink/10 transition">
+            <div className="w-16 h-16 rounded-full bg-cream/90 flex items-center justify-center shadow-lg">
+              <svg className="w-7 h-7 text-ink translate-x-0.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        )}
+        {playing && (
+          <div className="absolute bottom-3 right-3 bg-ink/70 text-cream text-xs px-2 py-1 rounded-full pointer-events-none">
+            {muted ? 'Tap for sound' : 'Sound on'}
+          </div>
+        )}
+      </div>
+      <figcaption className="text-sm text-ink/70">{reel.label}</figcaption>
+    </figure>
+  )
+}
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false)
@@ -265,19 +331,7 @@ export default function App() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {reels.map((r) => (
-              <figure key={r.id} className="space-y-3">
-                <div className="relative w-full overflow-hidden rounded-2xl border border-ink/10 bg-ink shadow-sm" style={{ aspectRatio: '9 / 16' }}>
-                  <video
-                    src={`/reels/${r.id}.mp4`}
-                    poster={r.poster}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    controls
-                    playsInline
-                    preload="metadata"
-                  />
-                </div>
-                <figcaption className="text-sm text-ink/70">{r.label}</figcaption>
-              </figure>
+              <ReelCard key={r.id} reel={r} />
             ))}
           </div>
         </div>
